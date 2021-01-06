@@ -1,7 +1,7 @@
 wget https://github.com/ARMmbed/mbedtls/archive/v2.24.0.tar.gz
 tar -zxvf v2.24.0.tar.gz
-cd mbedtls-2.24.0/
-make test
+#cd mbedtls-2.24.0/
+#make test
 
 # echo "----------------------------------------------"
 # echo "things to try"
