@@ -15,6 +15,15 @@ LOCAL_LDFLAGS = -L../library			\
 		-lmbedx509$(SHARED_SUFFIX)	\
 		-lmbedcrypto$(SHARED_SUFFIX)
 
+
+########################################
+# add the libmtlsrust library to the LDFLAGS
+# rust depends on libpthread and libdl
+LOCAL_LDFLAGS+= -L../../mtlsrust/target/debug -lmtlsrust$(SHARED_SUFFIX) -lpthread -ldl
+
+# libmtlsrust is the rust lib to which eventually all the  library/*.c functions should move to
+########################################
+
 include ../3rdparty/Makefile.inc
 LOCAL_CFLAGS+=$(THIRDPARTY_INCLUDES)
 
