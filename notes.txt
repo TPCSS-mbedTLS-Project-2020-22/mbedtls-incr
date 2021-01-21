@@ -1,0 +1,2 @@
+command used
+    cargo new mtlsrust --lib
