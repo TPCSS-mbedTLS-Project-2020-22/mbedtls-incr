@@ -13,4 +13,9 @@ libc = "0.2.0"
 [lib]
 crate-type = ['staticlib', 'cdylib']
 
+[features]
+MBEDTLS_ARC4_C = []
+
+
+default = [ "MBEDTLS_ARC4_C" ]
 
