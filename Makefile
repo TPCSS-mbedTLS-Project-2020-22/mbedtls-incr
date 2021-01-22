@@ -1,3 +1,4 @@
+all: test
 
 test:
 	cd mtlsrust/; cargo build
