@@ -2,9 +2,6 @@ extern crate libc;
 use libc::{size_t, c_uchar};
 use libc::{c_int, c_uint, c_void};
 
-//use std::mem;
-
-
 /***************** defs from header files ******************/
 #[derive(Debug)]
 #[repr(C)]
@@ -12,7 +9,7 @@ pub struct mbedtls_asn1_buf
 {
     tag: c_int,        /* ASN1 type, e.g. MBEDTLS_ASN1_UTF8_STRING. */
     len: size_t,       /* ASN1 length, in octets. */
-    p: *mut c_uchar, /* ASN1 data, e.g. in ASCII. */
+    p: *mut c_uchar,   /* ASN1 data, e.g. in ASCII. */
 }
 
 const MBEDTLS_ERR_PKCS12_FEATURE_UNAVAILABLE: c_int = -0x1F00;
@@ -91,18 +88,17 @@ pub extern "C" fn mbedtls_pkcs12_pbe_sha1_rc4_128( pbe_params: *mut mbedtls_asn1
                              data: *const c_uchar, len: size_t,
                              output: *mut c_uchar ) -> c_int
 {
-    //#[cfg(not(feature="MBEDTLS_ARC4_C"))]
     if cfg!(not(feature="MBEDTLS_ARC4_C")) {
         return MBEDTLS_ERR_PKCS12_FEATURE_UNAVAILABLE;
     }
 
-    //let mut ret: c_int = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     let mut ret: c_int;
-
 
     // unsigned char key[16];
     let key_arr = [ 0 as c_uchar; 16];
+ 
     let key: *const c_uchar = (&key_arr) as *const c_uchar;
+
     //mbedtls_arc4_context ctx;
     let mut ctx: mbedtls_arc4_context = mbedtls_arc4_context{ x: 0, y: 0, m: [0; 256], };
 
@@ -129,7 +125,6 @@ pub extern "C" fn mbedtls_pkcs12_pbe_sha1_rc4_128( pbe_params: *mut mbedtls_asn1
 
 
 /*
-
 XXX this is an internal function. can remove "pub" qualifier, once all callers are in rust.
 
 static void pkcs12_fill_buffer( unsigned char *data, size_t data_len,
