@@ -15,9 +15,8 @@ pub struct mbedtls_asn1_buf
     p: *mut c_uchar, /* ASN1 data, e.g. in ASCII. */
 }
 
-//const MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED: c_int = 0;
 const MBEDTLS_ERR_PKCS12_FEATURE_UNAVAILABLE: c_int = -0x1F00;
-const MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED:  c_int = -0x006E;   /* This is a bug in the library */
+//const MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED:  c_int = -0x006E;   /* This is a bug in the library */
 
 
 #[derive(Debug)]
@@ -97,8 +96,8 @@ pub extern "C" fn mbedtls_pkcs12_pbe_sha1_rc4_128( pbe_params: *mut mbedtls_asn1
         return MBEDTLS_ERR_PKCS12_FEATURE_UNAVAILABLE;
     }
 
-    let mut ret: c_int = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    //let mut ret: c_int;
+    //let mut ret: c_int = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
+    let mut ret: c_int;
 
 
     // unsigned char key[16];
