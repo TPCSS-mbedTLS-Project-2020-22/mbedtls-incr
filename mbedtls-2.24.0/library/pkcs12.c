@@ -225,20 +225,9 @@ exit:
 
 #endif /* MBEDTLS_ASN1_PARSE_C */
 
-static void pkcs12_fill_buffer( unsigned char *data, size_t data_len,
-                                const unsigned char *filler, size_t fill_len )
-{
-    unsigned char *p = data;
-    size_t use_len;
-
-    while( data_len > 0 )
-    {
-        use_len = ( data_len > fill_len ) ? fill_len : data_len;
-        memcpy( p, filler, use_len );
-        p += use_len;
-        data_len -= use_len;
-    }
-}
+/* XXX function is ported to rust */
+extern void pkcs12_fill_buffer( unsigned char *data, size_t data_len,
+                                const unsigned char *filler, size_t fill_len );
 
 int mbedtls_pkcs12_derivation( unsigned char *data, size_t datalen,
                        const unsigned char *pwd, size_t pwdlen,

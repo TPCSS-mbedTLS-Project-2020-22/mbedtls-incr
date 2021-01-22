@@ -15,6 +15,17 @@ LOCAL_LDFLAGS = -L../library			\
 		-lmbedx509$(SHARED_SUFFIX)	\
 		-lmbedcrypto$(SHARED_SUFFIX)
 
+
+########################################
+# add the libmtlsrust library to the LDFLAGS
+# rust depends on libpthread and libdl
+# the rust library is copied to ../library  so no need of additional Lib path
+#LOCAL_LDFLAGS+= -L../../mtlsrust/target/debug -lmtlsrust$(SHARED_SUFFIX) -lpthread -ldl
+LOCAL_LDFLAGS+= -lmtlsrust$(SHARED_SUFFIX) -lpthread -ldl
+
+# libmtlsrust is the rust lib to which eventually all the  library/*.c functions should move to
+########################################
+
 include ../3rdparty/Makefile.inc
 LOCAL_CFLAGS+=$(THIRDPARTY_INCLUDES)
 
@@ -23,11 +34,26 @@ LOCAL_CFLAGS+=$(THIRDPARTY_INCLUDES)
 # on non-POSIX platforms.
 LOCAL_CFLAGS += -D_POSIX_C_SOURCE=200809L
 
+
+
+################
+# use a separate MBEDLIBS_RUST variable which need not be added as a dependency of test suites
+# with this, can avoid rebuilding test_suites every time mtlsrust lib is rebuilt.
+################
+
 ifndef SHARED
 MBEDLIBS=../library/libmbedcrypto.a ../library/libmbedx509.a ../library/libmbedtls.a
+# add libmtlsrust as a dependency
+#MBEDLIBS+=../library/libmtlsrust.a
+#MBEDLIBS_RUST+=../library/libmtlsrust.a    -- disabling .a for now to make sure .so is being used
+#  ^^^ XXX must enable this back for final release
 else
 MBEDLIBS=../library/libmbedcrypto.$(DLEXT) ../library/libmbedx509.$(DLEXT) ../library/libmbedtls.$(DLEXT)
+# add libmtlsrust as a dependency
+#MBEDLIBS+=../library/libmtlsrust.$(DLEXT)
+MBEDLIBS_RUST=../library/libmtlsrust.$(DLEXT)
 endif
+
 
 ifdef DEBUG
 LOCAL_CFLAGS += -g3
