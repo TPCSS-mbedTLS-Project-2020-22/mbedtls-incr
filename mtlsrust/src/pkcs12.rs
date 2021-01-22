@@ -1,6 +1,5 @@
 extern crate libc;
-use libc::{size_t, c_uchar, c_void};
-use libc::{memcpy};
+use libc::{size_t, c_uchar};
 
 
 /*
@@ -20,7 +19,7 @@ pub extern "C" fn pkcs12_fill_buffer( data: *mut c_uchar, mut data_len: size_t,
 
     while data_len > 0 {
         use_len = if data_len > fill_len { fill_len } else { data_len };
-        unsafe { memcpy( p as *mut c_void , filler as *mut c_void, use_len ) };
+        unsafe{ std::ptr::copy_nonoverlapping(filler, p, use_len) };
         p = unsafe { p.offset(use_len as isize) }; //p += use_len;
         data_len -= use_len;
     }
