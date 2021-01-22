@@ -92,39 +92,38 @@ pub extern "C" fn mbedtls_pkcs12_pbe_sha1_rc4_128( pbe_params: *mut mbedtls_asn1
                              data: *const c_uchar, len: size_t,
                              output: *mut c_uchar ) -> c_int
 {
-//    #[cfg(not(feature="MBEDTLS_ARC4_C"))] {
-//        return MBEDTLS_ERR_PKCS12_FEATURE_UNAVAILABLE;
-//    }
+    #[cfg(not(feature="MBEDTLS_ARC4_C"))] {
+        return MBEDTLS_ERR_PKCS12_FEATURE_UNAVAILABLE;
+    }
 
-    //#[cfg(feature="MBEDTLS_ARC4_C")] {
-        let mut ret: c_int = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
+    let mut ret: c_int = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
+    //let mut ret: c_int;
 
 
-        // unsigned char key[16];
-        let key_arr = [ 0 as c_uchar; 16];
-        let key: *const c_uchar = (&key_arr) as *const c_uchar;
-        //mbedtls_arc4_context ctx;
-        let mut ctx: mbedtls_arc4_context = mbedtls_arc4_context{ x: 0, y: 0, m: [0; 256], };
+    // unsigned char key[16];
+    let key_arr = [ 0 as c_uchar; 16];
+    let key: *const c_uchar = (&key_arr) as *const c_uchar;
+    //mbedtls_arc4_context ctx;
+    let mut ctx: mbedtls_arc4_context = mbedtls_arc4_context{ x: 0, y: 0, m: [0; 256], };
 
-        unsafe { mbedtls_arc4_init( &mut ctx ) };
+    unsafe { mbedtls_arc4_init( &mut ctx ) };
 
-        const NULL: *const c_uchar = std::ptr::null();
-        ret = unsafe { pkcs12_pbe_derive_key_iv( pbe_params, MBEDTLS_MD_SHA1,
-                                              pwd, pwdlen,
-                                              key as *mut c_uchar, 16, NULL, 0 ) };
-        if ret != 0  {
-            return ret ;
-        }
+    const NULL: *const c_uchar = std::ptr::null();
+    ret = unsafe { pkcs12_pbe_derive_key_iv( pbe_params, MBEDTLS_MD_SHA1,
+            pwd, pwdlen,
+            key as *mut c_uchar, 16, NULL, 0 ) };
+    if ret != 0  {
+        return ret ;
+    }
 
-        unsafe { mbedtls_arc4_setup( &mut ctx, key, 16 )};
-        ret = unsafe { mbedtls_arc4_crypt( &mut ctx, len, data, output ) };
+    unsafe { mbedtls_arc4_setup( &mut ctx, key, 16 )};
+    ret = unsafe { mbedtls_arc4_crypt( &mut ctx, len, data, output ) };
 
-        let sizeof_key: size_t = key_arr.len() * std::mem::size_of::<c_uchar>();
-        unsafe { mbedtls_platform_zeroize( key as *mut c_void, sizeof_key ) };
-        unsafe { mbedtls_arc4_free( &mut ctx ) };
+    let sizeof_key: size_t = key_arr.len() * std::mem::size_of::<c_uchar>();
+    unsafe { mbedtls_platform_zeroize( key as *mut c_void, sizeof_key ) };
+    unsafe { mbedtls_arc4_free( &mut ctx ) };
 
-        return ret;
-    //}
+    return ret;
 }
 
 

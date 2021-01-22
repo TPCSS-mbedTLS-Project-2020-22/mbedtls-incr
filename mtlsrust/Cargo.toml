@@ -17,3 +17,5 @@ crate-type = ['staticlib', 'cdylib']
 MBEDTLS_ARC4_C = []
 
 
+default = [ "MBEDTLS_ARC4_C" ]
+
