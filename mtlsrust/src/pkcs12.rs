@@ -92,7 +92,8 @@ pub extern "C" fn mbedtls_pkcs12_pbe_sha1_rc4_128( pbe_params: *mut mbedtls_asn1
                              data: *const c_uchar, len: size_t,
                              output: *mut c_uchar ) -> c_int
 {
-    #[cfg(not(feature="MBEDTLS_ARC4_C"))] {
+    //#[cfg(not(feature="MBEDTLS_ARC4_C"))]
+    if cfg!(not(feature="MBEDTLS_ARC4_C")) {
         return MBEDTLS_ERR_PKCS12_FEATURE_UNAVAILABLE;
     }
 
